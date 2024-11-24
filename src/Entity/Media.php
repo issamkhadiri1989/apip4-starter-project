@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
 //    paginationEnabled: false,
     operations: [
         new Get(),
-        new GetCollection(paginationEnabled: true, paginationItemsPerPage: 5),
+        new GetCollection(paginationEnabled: true, paginationItemsPerPage: 5, paginationClientItemsPerPage:true, paginationMaximumItemsPerPage: 5),
     ]
 )]
 class Media
