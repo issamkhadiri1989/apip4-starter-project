@@ -28,7 +28,7 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
             parameters: [
                 'order[:property]' => new QueryParameter(filter: 'movies.order_filter'),
             ],
-            filters: ['movies.search_filter'],
+            filters: ['movies.search_filter', 'movies.date_filter'],
         ),
     ]
 )]
