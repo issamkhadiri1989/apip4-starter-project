@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
 //    paginationEnabled: false,
     operations: [
         new Get(),
-        new GetCollection(paginationEnabled: true, paginationItemsPerPage: 5, paginationClientItemsPerPage:true, paginationMaximumItemsPerPage: 5),
+        new GetCollection(paginationEnabled: true, paginationItemsPerPage: 5, paginationClientItemsPerPage:true, paginationMaximumItemsPerPage: 5, order: ['year' => 'DESC']),
     ]
 )]
 class Media
@@ -37,7 +37,7 @@ class Media
 
     #[ORM\Column]
     #[SerializedName("Year")]
-    private ?string $year = null;
+    private ?int $year = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[SerializedName("Plot")]
@@ -75,12 +75,12 @@ class Media
         return $this;
     }
 
-    public function getYear(): ?string
+    public function getYear(): ?int
     {
         return $this->year;
     }
 
-    public function setYear(string $year): static
+    public function setYear(int $year): static
     {
         $this->year = $year;
 
