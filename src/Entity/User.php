@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use App\Controller\ProfileController;
 use App\Processor\Registration\DefaultRegistrationProcessor;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
@@ -15,22 +15,22 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
-use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\LessThan;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ApiResource(
     operations: [
-        new Get(
-            uriTemplate: "/profile",
-            controller: ProfileController::class,
-        ),
         new Post(
             uriTemplate: "/register",
             /*output: false,*/    #uncomment this line to enable 204 no content for this endpoint,
             normalizationContext: ['groups' => ['api:read']], # using groups to hide sensitive fields like password
             processor: DefaultRegistrationProcessor::class,
+        ),
+        new Patch(
+            denormalizationContext: ['groups' => ['api:update:profile']],
+            normalizationContext: ['groups' => ['api:read']],
+            security: 'is_granted("ROLE_USER") and object == user',
         )
     ],
 )]
@@ -59,11 +59,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['api:read'])]
+    #[Groups(['api:read', 'api:update"profile'])]
     private ?string $fullName = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[LessThan(value: '-18 years')]
+    #[Groups(['api:update"profile'])]
     private ?\DateTimeInterface $dateOfBirth = null;
 
     public function getId(): ?int
