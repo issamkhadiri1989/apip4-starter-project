@@ -4,7 +4,9 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
+use App\Controller\ProfileController;
 use App\Processor\Registration\DefaultRegistrationProcessor;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
@@ -20,6 +22,10 @@ use Symfony\Component\Validator\Constraints\LessThan;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ApiResource(
     operations: [
+        new Get(
+            uriTemplate: "/profile",
+            controller: ProfileController::class,
+        ),
         new Post(
             uriTemplate: "/register",
             /*output: false,*/    #uncomment this line to enable 204 no content for this endpoint,
