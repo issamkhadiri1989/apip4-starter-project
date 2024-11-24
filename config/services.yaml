@@ -36,3 +36,7 @@ services:
         parent:  'api_platform.doctrine.orm.date_filter'
         arguments: [{ releaseDate: ~ }]
         tags: ['api_platform.filter']
+    movies.range_filter:
+        parent: 'api_platform.doctrine.orm.range_filter'
+        arguments: [{year: ~}]
+        tags: ['api_platform.filter']
