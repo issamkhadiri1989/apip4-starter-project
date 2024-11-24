@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -27,6 +28,7 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
             parameters: [
                 'order[:property]' => new QueryParameter(filter: 'movies.order_filter'),
             ],
+            filters: ['movies.search_filter'],
         ),
     ]
 )]

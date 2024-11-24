@@ -28,3 +28,7 @@ services:
             $properties: { id: ~, year: ~ }
             $orderParameterName: order
         tags: [ 'api_platform.filter' ]
+    movies.search_filter:
+        parent:  'api_platform.doctrine.orm.search_filter'
+        arguments: [{ title: 'partial' }]
+        tags: ['api_platform.filter']
