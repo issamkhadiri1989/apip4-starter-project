@@ -7,6 +7,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\QueryParameter;
 use App\Repository\MediaRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +18,16 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
 //    paginationEnabled: false,
     operations: [
         new Get(),
-        new GetCollection(paginationEnabled: true, paginationItemsPerPage: 5, paginationClientItemsPerPage:true, paginationMaximumItemsPerPage: 5, order: ['year' => 'DESC']),
+        new GetCollection(
+            paginationEnabled: true,
+            paginationItemsPerPage: 5,
+            paginationClientItemsPerPage:true,
+            paginationMaximumItemsPerPage: 5,
+//            order: ['year' => 'DESC'],
+            parameters: [
+                'order[:property]' => new QueryParameter(filter: 'movies.order_filter'),
+            ],
+        ),
     ]
 )]
 class Media
