@@ -8,8 +8,11 @@ use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints\LessThan;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -18,6 +21,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
         new Post(uriTemplate: "/register")
     ],
 )]
+#[UniqueEntity(fields: ['email'], message: 'An account with the given email is already existing.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -44,6 +48,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $fullName = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[LessThan(value: '-18 years')]
     private ?\DateTimeInterface $dateOfBirth = null;
 
     public function getId(): ?int
