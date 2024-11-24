@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\QueryParameter;
 use App\Repository\MediaRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 
@@ -20,7 +21,11 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
 #[ApiResource(
 //    paginationEnabled: false,
     operations: [
-        new Get(),
+        new Get(
+            normalizationContext: [
+                'groups' => ['api:read']
+            ]
+        ),
         new GetCollection(
             paginationEnabled: true,
             paginationItemsPerPage: 5,
@@ -52,10 +57,12 @@ class Media
 
     #[ORM\Column(length: 255)]
     #[SerializedName("Title")]
+    #[Groups(['api:read'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[SerializedName("Released")]
+    #[Groups(['api:read'])]
     private ?\DateTimeInterface $releaseDate = null;
 
     #[ORM\Column]
@@ -64,6 +71,7 @@ class Media
 
     #[ORM\Column(type: Types::TEXT)]
     #[SerializedName("Plot")]
+    #[Groups(['api:read'])]
     private ?string $plot = null;
 
     #[ORM\ManyToOne(inversedBy: 'catalog')]
