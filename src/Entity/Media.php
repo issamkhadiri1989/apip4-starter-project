@@ -14,9 +14,10 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
 #[ApiResource(
+//    paginationEnabled: false,
     operations: [
         new Get(),
-        new GetCollection()
+        new GetCollection(paginationEnabled: false)
     ]
 )]
 class Media
