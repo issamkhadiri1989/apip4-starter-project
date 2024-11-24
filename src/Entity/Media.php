@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\QueryParameter;
 use App\Repository\MediaRepository;
 use Doctrine\DBAL\Types\Types;
@@ -32,6 +33,15 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
             filters: ['movies.search_filter', 'movies.date_filter', ' movies.range_filter'],
         ),
     ]
+)]
+#[ApiResource(
+    operations: [
+        new GetCollection()
+    ],
+    uriTemplate: '/categories/{id}/catalog',
+    uriVariables: [
+        'id' => new Link(fromClass: Category::class, toProperty: 'category')
+    ],
 )]
 class Media
 {
