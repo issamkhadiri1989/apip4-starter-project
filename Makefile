@@ -45,3 +45,6 @@ reload-nginx:
 
 restart:
 	docker compose restart
+
+generate-pairs:
+	docker-compose exec app php bin/console lexik:jwt:generate-keypair
