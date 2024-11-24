@@ -5,12 +5,14 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
+use App\Processor\Registration\DefaultRegistrationProcessor;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\LessThan;
 
@@ -18,7 +20,12 @@ use Symfony\Component\Validator\Constraints\LessThan;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ApiResource(
     operations: [
-        new Post(uriTemplate: "/register", output: false)
+        new Post(
+            uriTemplate: "/register",
+            /*output: false,*/    #uncomment this line to enable 204 no content for this endpoint,
+            normalizationContext: ['groups' => ['api:read']], # using groups to hide sensitive fields like password
+            processor: DefaultRegistrationProcessor::class,
+        )
     ],
 )]
 #[UniqueEntity(fields: ['email'], message: 'An account with the given email is already existing.')]
@@ -30,6 +37,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(['api:read'])]
     private ?string $email = null;
 
     /**
@@ -45,6 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['api:read'])]
     private ?string $fullName = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
