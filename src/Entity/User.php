@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints\LessThan;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ApiResource(
     operations: [
-        new Post(uriTemplate: "/register")
+        new Post(uriTemplate: "/register", output: false)
     ],
 )]
 #[UniqueEntity(fields: ['email'], message: 'An account with the given email is already existing.')]
