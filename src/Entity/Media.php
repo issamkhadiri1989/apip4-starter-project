@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\QueryParameter;
 use App\Repository\MediaRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
@@ -49,7 +50,7 @@ class Media
 
     #[ORM\Column]
     #[SerializedName("Year")]
-    private ?int $year = null;
+    private  $year = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[SerializedName("Plot")]
@@ -57,6 +58,10 @@ class Media
 
     #[ORM\ManyToOne(inversedBy: 'catalog')]
     private ?Type $type = null;
+
+    #[ORM\ManyToOne(inversedBy: 'media')]
+    #[Ignore]
+    private ?Category $category = null;
 
     public function getId(): ?int
     {
@@ -87,12 +92,12 @@ class Media
         return $this;
     }
 
-    public function getYear(): ?int
+    public function getYear()
     {
         return $this->year;
     }
 
-    public function setYear(int $year): static
+    public function setYear( $year): static
     {
         $this->year = $year;
 
@@ -119,6 +124,18 @@ class Media
     public function setType(?Type $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }
