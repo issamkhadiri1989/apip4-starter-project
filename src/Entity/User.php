@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Processor\Registration\DefaultRegistrationProcessor;
@@ -21,6 +22,9 @@ use Symfony\Component\Validator\Constraints\LessThan;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ApiResource(
     operations: [
+        new Get(
+            security: 'is_granted("ROLE_USER") and object == user',
+        ),
         new Post(
             uriTemplate: "/register",
             /*output: false,*/    #uncomment this line to enable 204 no content for this endpoint,
